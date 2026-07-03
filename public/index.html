@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced QR Code Generator</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 Advanced QR Generator</h1>
+            <p>Create stunning, customized QR codes with advanced features</p>
+        </header>
+        
+        <!-- Toast Notification Container -->
+        <div id="toastContainer" class="toast-container"></div>
+
+        <div class="main-content">
+            <div class="controls-panel">
+                <div class="tab-navigation">
+                    <button class="tab-btn active" data-tab="content">Content</button>
+                    <button class="tab-btn" data-tab="design">Design</button>
+                    <button class="tab-btn" data-tab="logo">Logo</button>
+                    <button class="tab-btn" data-tab="advanced">Advanced</button>
+                </div>
+
+                <div class="tab-content active" id="content-tab">
+                    <div class="form-group">
+                        <label>QR Code Type</label>
+                        <select id="qrType">
+                            <option value="url">Website URL</option>
+                            <option value="text">Plain Text</option>
+                            <option value="email">Email</option>
+                            <option value="phone">Phone</option>
+                            <option value="sms">SMS</option>
+                            <option value="vcard">vCard</option>
+                            <option value="wifi">WiFi</option>
+                        </select>
+                    </div>
+
+                    <div id="dynamicFields"></div>
+                </div>
+
+                <div class="tab-content" id="design-tab">
+                    <!-- Live Preview -->
+                    <div class="design-preview-container">
+                        <div class="design-preview-header">
+                            <span>Live Preview</span>
+                            <small>Auto-updates as you customize</small>
+                        </div>
+                        <div class="design-preview-qr" id="designPreview">
+                            <img id="designPreviewImage" src="" alt="Design preview" style="display: none;">
+                            <div class="preview-placeholder">
+                                <svg width="120" height="120" viewBox="0 0 100 100">
+                                    <rect x="10" y="10" width="35" height="35" fill="#ddd"/>
+                                    <rect x="55" y="10" width="35" height="35" fill="#ddd"/>
+                                    <rect x="10" y="55" width="35" height="35" fill="#ddd"/>
+                                    <rect x="20" y="20" width="15" height="15" fill="#999"/>
+                                    <rect x="65" y="20" width="15" height="15" fill="#999"/>
+                                    <rect x="20" y="65" width="15" height="15" fill="#999"/>
+                                </svg>
+                                <p>Select options to preview</p>
+                            </div>
+                            <div class="preview-loading" id="previewLoading" style="display: none;">
+                                <div class="spinner"></div>
+                                <p>Updating preview...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="accordion-item">
+                            <button type="button" class="accordion-header" data-accordion="bodyShape">
+                                <span>Body Shape: <strong id="bodyShapeLabel">Square</strong></span>
+                                <span class="accordion-icon">▼</span>
+                            </button>
+                            <div class="accordion-content" id="bodyShapeAccordion">
+                                <div class="shape-options-grid">
+                                    <button type="button" class="shape-option active" data-shape="square">Square</button>
+                                    <button type="button" class="shape-option" data-shape="mosaic">Mosaic</button>
+                                    <button type="button" class="shape-option" data-shape="dot">Dot</button>
+                                    <button type="button" class="shape-option" data-shape="circle">Circle</button>
+                                    <button type="button" class="shape-option" data-shape="circle-zebra">Zebra</button>
+                                    <button type="button" class="shape-option" data-shape="circle-zebra-vertical">Zebra V</button>
+                                    <button type="button" class="shape-option" data-shape="circular">Circular</button>
+                                    <button type="button" class="shape-option" data-shape="edge-cut">Edge Cut</button>
+                                    <button type="button" class="shape-option" data-shape="edge-cut-smooth">Edge Smooth</button>
+                                    <button type="button" class="shape-option" data-shape="japnese">Japanese</button>
+                                    <button type="button" class="shape-option" data-shape="leaf">Leaf</button>
+                                    <button type="button" class="shape-option" data-shape="pointed">Pointed</button>
+                                    <button type="button" class="shape-option" data-shape="pointed-edge-cut">Pointed Edge</button>
+                                    <button type="button" class="shape-option" data-shape="pointed-in">Pointed In</button>
+                                    <button type="button" class="shape-option" data-shape="pointed-in-smooth">Pointed In S</button>
+                                    <button type="button" class="shape-option" data-shape="pointed-smooth">Pointed S</button>
+                                    <button type="button" class="shape-option" data-shape="round">Round</button>
+                                    <button type="button" class="shape-option" data-shape="rounded-in">Rounded In</button>
+                                    <button type="button" class="shape-option" data-shape="rounded-in-smooth">Rounded In S</button>
+                                    <button type="button" class="shape-option" data-shape="rounded-pointed">Rounded P</button>
+                                    <button type="button" class="shape-option" data-shape="star">Star</button>
+                                    <button type="button" class="shape-option" data-shape="diamond">Diamond</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="accordion-item">
+                            <button type="button" class="accordion-header" data-accordion="eyeFrame">
+                                <span>Eye Frame: <strong id="eyeFrameLabel">Frame 0</strong></span>
+                                <span class="accordion-icon">▼</span>
+                            </button>
+                            <div class="accordion-content" id="eyeFrameAccordion">
+                                <div class="shape-options-grid">
+                                    <button type="button" class="shape-option active" data-frame="frame0">Frame 0</button>
+                                    <button type="button" class="shape-option" data-frame="frame1">Frame 1</button>
+                                    <button type="button" class="shape-option" data-frame="frame2">Frame 2</button>
+                                    <button type="button" class="shape-option" data-frame="frame3">Frame 3</button>
+                                    <button type="button" class="shape-option" data-frame="frame4">Frame 4</button>
+                                    <button type="button" class="shape-option" data-frame="frame5">Frame 5</button>
+                                    <button type="button" class="shape-option" data-frame="frame6">Frame 6</button>
+                                    <button type="button" class="shape-option" data-frame="frame7">Frame 7</button>
+                                    <button type="button" class="shape-option" data-frame="frame8">Frame 8</button>
+                                    <button type="button" class="shape-option" data-frame="frame10">Frame 10</button>
+                                    <button type="button" class="shape-option" data-frame="frame11">Frame 11</button>
+                                    <button type="button" class="shape-option" data-frame="frame12">Frame 12</button>
+                                    <button type="button" class="shape-option" data-frame="frame13">Frame 13</button>
+                                    <button type="button" class="shape-option" data-frame="frame14">Frame 14</button>
+                                    <button type="button" class="shape-option" data-frame="frame16">Frame 16</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="accordion-item">
+                            <button type="button" class="accordion-header" data-accordion="eyeBall">
+                                <span>Eye Ball: <strong id="eyeBallLabel">Ball 0</strong></span>
+                                <span class="accordion-icon">▼</span>
+                            </button>
+                            <div class="accordion-content" id="eyeBallAccordion">
+                                <div class="shape-options-grid">
+                                    <button type="button" class="shape-option active" data-ball="ball0">Ball 0</button>
+                                    <button type="button" class="shape-option" data-ball="ball1">Ball 1</button>
+                                    <button type="button" class="shape-option" data-ball="ball2">Ball 2</button>
+                                    <button type="button" class="shape-option" data-ball="ball3">Ball 3</button>
+                                    <button type="button" class="shape-option" data-ball="ball5">Ball 5</button>
+                                    <button type="button" class="shape-option" data-ball="ball6">Ball 6</button>
+                                    <button type="button" class="shape-option" data-ball="ball7">Ball 7</button>
+                                    <button type="button" class="shape-option" data-ball="ball8">Ball 8</button>
+                                    <button type="button" class="shape-option" data-ball="ball10">Ball 10</button>
+                                    <button type="button" class="shape-option" data-ball="ball11">Ball 11</button>
+                                    <button type="button" class="shape-option" data-ball="ball12">Ball 12</button>
+                                    <button type="button" class="shape-option" data-ball="ball13">Ball 13</button>
+                                    <button type="button" class="shape-option" data-ball="ball14">Ball 14</button>
+                                    <button type="button" class="shape-option" data-ball="ball15">Ball 15</button>
+                                    <button type="button" class="shape-option" data-ball="ball16">Ball 16</button>
+                                    <button type="button" class="shape-option" data-ball="ball17">Ball 17</button>
+                                    <button type="button" class="shape-option" data-ball="ball18">Ball 18</button>
+                                    <button type="button" class="shape-option" data-ball="ball19">Ball 19</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="color-section">
+                        <div class="form-group">
+                            <label>Color Mode</label>
+                            <select id="colorMode">
+                                <option value="single">Single Color</option>
+                                <option value="gradient">Gradient</option>
+                                <option value="radial">Radial Gradient</option>
+                            </select>
+                        </div>
+
+                        <div id="colorControls">
+                            <div class="form-group">
+                                <label>Body Color (QR Data Pattern)</label>
+                                <div class="color-picker-wrapper" data-color-input="bodyColor">
+                                    <div class="color-input-display">
+                                        <div class="color-preview-box" style="background-color: #000000;"></div>
+                                        <span class="color-hex-value">#000000</span>
+                                    </div>
+                                    <div class="color-picker-popup">
+                                        <div class="color-picker-header">
+                                            <span>Select Color</span>
+                                            <button class="color-picker-close">×</button>
+                                        </div>
+                                        <div class="color-picker-canvas-wrapper">
+                                            <canvas class="color-picker-canvas" width="236" height="140"></canvas>
+                                            <div class="color-picker-cursor"></div>
+                                        </div>
+                                        <div class="color-picker-sliders">
+                                            <div class="color-slider-wrapper">
+                                                <span class="color-slider-label">Hue</span>
+                                                <div class="color-slider-track">
+                                                    <canvas class="color-slider-canvas hue-slider" width="30" height="80"></canvas>
+                                                    <div class="color-slider-thumb"></div>
+                                                </div>
+                                            </div>
+                                            <div class="color-slider-wrapper">
+                                                <span class="color-slider-label">Brightness</span>
+                                                <div class="color-slider-track">
+                                                    <canvas class="color-slider-canvas brightness-slider" width="30" height="80"></canvas>
+                                                    <div class="color-slider-thumb"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="color-picker-hex-input">
+                                            <span>#</span>
+                                            <input type="text" class="hex-input" maxlength="6" value="000000">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Background Color</label>
+                                <div class="color-picker-wrapper" data-color-input="bgColor">
+                                    <div class="color-input-display">
+                                        <div class="color-preview-box" style="background-color: #ffffff;"></div>
+                                        <span class="color-hex-value">#ffffff</span>
+                                    </div>
+                                    <div class="color-picker-popup">
+                                        <div class="color-picker-header">
+                                            <span>Select Color</span>
+                                            <button class="color-picker-close">×</button>
+                                        </div>
+                                        <div class="color-picker-canvas-wrapper">
+                                            <canvas class="color-picker-canvas" width="236" height="140"></canvas>
+                                            <div class="color-picker-cursor"></div>
+                                        </div>
+                                        <div class="color-picker-sliders">
+                                            <div class="color-slider-wrapper">
+                                                <span class="color-slider-label">Hue</span>
+                                                <div class="color-slider-track">
+                                                    <canvas class="color-slider-canvas hue-slider" width="30" height="80"></canvas>
+                                                    <div class="color-slider-thumb"></div>
+                                                </div>
+                                            </div>
+                                            <div class="color-slider-wrapper">
+                                                <span class="color-slider-label">Brightness</span>
+                                                <div class="color-slider-track">
+                                                    <canvas class="color-slider-canvas brightness-slider" width="30" height="80"></canvas>
+                                                    <div class="color-slider-thumb"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="color-picker-hex-input">
+                                            <span>#</span>
+                                            <input type="text" class="hex-input" maxlength="6" value="ffffff">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="separateEyeColors" style="width: auto; margin-right: 8px;">
+                                Use Different Colors for Eyes
+                            </label>
+                            <small>Check this to set different colors for the corner eye patterns</small>
+                        </div>
+                        
+                        <div id="eyeColorControls" style="display: none;">
+                            <div class="form-group">
+                                <label>Eye Frame Color (Outer)</label>
+                                <div class="color-picker-wrapper" data-color-input="eyeFrameColor">
+                                    <div class="color-input-display">
+                                        <div class="color-preview-box" style="background-color: #000000;"></div>
+                                        <span class="color-hex-value">#000000</span>
+                                    </div>
+                                    <div class="color-picker-popup">
+                                        <div class="color-picker-header">
+                                            <span>Select Color</span>
+                                            <button class="color-picker-close">×</button>
+                                        </div>
+                                        <div class="color-picker-canvas-wrapper">
+                                            <canvas class="color-picker-canvas" width="236" height="140"></canvas>
+                                            <div class="color-picker-cursor"></div>
+                                        </div>
+                                        <div class="color-picker-sliders">
+                                            <div class="color-slider-wrapper">
+                                                <span class="color-slider-label">Hue</span>
+                                                <div class="color-slider-track">
+                                                    <canvas class="color-slider-canvas hue-slider" width="30" height="80"></canvas>
+                                                    <div class="color-slider-thumb"></div>
+                                                </div>
+                                            </div>
+                                            <div class="color-slider-wrapper">
+                                                <span class="color-slider-label">Brightness</span>
+                                                <div class="color-slider-track">
+                                                    <canvas class="color-slider-canvas brightness-slider" width="30" height="80"></canvas>
+                                                    <div class="color-slider-thumb"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="color-picker-hex-input">
+                                            <span>#</span>
+                                            <input type="text" class="hex-input" maxlength="6" value="000000">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Eye Ball Color (Inner)</label>
+                                <div class="color-picker-wrapper" data-color-input="eyeBallColor">
+                                    <div class="color-input-display">
+                                        <div class="color-preview-box" style="background-color: #000000;"></div>
+                                        <span class="color-hex-value">#000000</span>
+                                    </div>
+                                    <div class="color-picker-popup">
+                                        <div class="color-picker-header">
+                                            <span>Select Color</span>
+                                            <button class="color-picker-close">×</button>
+                                        </div>
+                                        <div class="color-picker-canvas-wrapper">
+                                            <canvas class="color-picker-canvas" width="236" height="140"></canvas>
+                                            <div class="color-picker-cursor"></div>
+                                        </div>
+                                        <div class="color-picker-sliders">
+                                            <div class="color-slider-wrapper">
+                                                <span class="color-slider-label">Hue</span>
+                                                <div class="color-slider-track">
+                                                    <canvas class="color-slider-canvas hue-slider" width="30" height="80"></canvas>
+                                                    <div class="color-slider-thumb"></div>
+                                                </div>
+                                            </div>
+                                            <div class="color-slider-wrapper">
+                                                <span class="color-slider-label">Brightness</span>
+                                                <div class="color-slider-track">
+                                                    <canvas class="color-slider-canvas brightness-slider" width="30" height="80"></canvas>
+                                                    <div class="color-slider-thumb"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="color-picker-hex-input">
+                                            <span>#</span>
+                                            <input type="text" class="hex-input" maxlength="6" value="000000">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="logo-tab">
+                    <div class="form-group">
+                        <label>Logo Upload</label>
+                        <input type="file" id="logoUpload" accept="image/*">
+                        <small>Upload your logo (PNG, JPG recommended). PNG with transparency supported.</small>
+                    </div>
+                    
+                    <!-- Logo Preview -->
+                    <div id="logoPreviewContainer" class="logo-preview-container" style="display: none;">
+                        <div class="logo-preview-header">
+                            <span>Logo Preview</span>
+                            <button type="button" id="removeLogo" class="remove-logo-btn-small">Remove</button>
+                        </div>
+                        <div class="logo-preview-image">
+                            <img id="logoPreviewImage" src="" alt="Logo preview">
+                        </div>
+                    </div>
+                    
+                    <!-- Remove Background Option -->
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="removeBg" class="modern-checkbox">
+                            <span class="checkbox-custom"></span>
+                            <span class="checkbox-text">
+                                <strong>Remove Background</strong>
+                                <small>Automatically remove logo background (works best with solid backgrounds)</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="advanced-tab">
+                    <div class="form-group">
+                        <label>Error Correction Level</label>
+                        <select id="errorCorrection">
+                            <option value="L">Low (7%)</option>
+                            <option value="M" selected>Medium (15%)</option>
+                            <option value="Q">Quartile (25%)</option>
+                            <option value="H">High (30%)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>QR Code Size</label>
+                        <input type="range" id="qrSize" min="300" max="3000" step="100" value="1000">
+                        <span id="qrSizeValue">1000px</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Download Format</label>
+                        <select id="downloadFormat">
+                            <option value="png">PNG</option>
+                            <option value="svg">SVG</option>
+                            <option value="pdf">PDF</option>
+                            <option value="eps">EPS</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="preview-panel">
+                <div class="preview-container">
+                    <div id="qrPreview" class="qr-preview">
+                        <div class="placeholder">
+                            <svg width="100" height="100" viewBox="0 0 100 100">
+                                <rect x="10" y="10" width="35" height="35" fill="#ddd"/>
+                                <rect x="55" y="10" width="35" height="35" fill="#ddd"/>
+                                <rect x="10" y="55" width="35" height="35" fill="#ddd"/>
+                                <rect x="20" y="20" width="15" height="15" fill="#999"/>
+                                <rect x="65" y="20" width="15" height="15" fill="#999"/>
+                                <rect x="20" y="65" width="15" height="15" fill="#999"/>
+                            </svg>
+                            <p>Your QR code will appear here</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="generate-btn" id="generateBtn">Generate QR Code</button>
+
+                <div class="action-buttons">
+                    <button class="download-btn" id="downloadBtn" disabled>
+                        <span>📥</span> Download
+                    </button>
+                    <button class="copy-btn" id="copyBtn" disabled>
+                        <span>📋</span> Copy
+                    </button>
+                </div>
+
+                <div class="presets">
+                    <h3>Quick Presets</h3>
+                    <div class="preset-grid">
+                        <button class="preset-btn" data-preset="facebook">Facebook</button>
+                        <button class="preset-btn" data-preset="youtube">YouTube</button>
+                        <button class="preset-btn" data-preset="instagram">Instagram</button>
+                        <button class="preset-btn" data-preset="twitter">Twitter</button>
+                        <button class="preset-btn" data-preset="linkedin">LinkedIn</button>
+                        <button class="preset-btn" data-preset="whatsapp">WhatsApp</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/script.js"></script>
+</body>
+</html>
