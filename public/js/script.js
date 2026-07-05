@@ -1165,7 +1165,7 @@ async function addWatermarkToQR(qrUrl) {
             ctx.drawImage(qrImage, 0, 0);
             
             // Add watermark text at bottom right
-            const watermarkText = 'cebutech.it';
+            const watermarkText = '';
             const fontSize = Math.max(12, canvas.width * 0.050); // Smaller, responsive font size
             const padding = fontSize * 0.4;
             
